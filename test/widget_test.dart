@@ -1,30 +1,35 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:real_estate_flutter_app/main.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+import 'package:provider/provider.dart';
+import 'package:real_estate_flutter_app/providers/property_provider.dart';
+import 'package:real_estate_flutter_app/services/property_api_service.dart';
+import 'package:real_estate_flutter_app/ui/screens/home_screen.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Home screen shows Properties title', (WidgetTester tester) async {
+    final mockClient = MockClient((request) async {
+      return http.Response(
+        '{"properties":[{"id":"p1","title":"Test Loft","address":"1 Test St","description":"Nice place to stay","price":123,"status":"forSale","isUserAdded":false}]}',
+        200,
+        headers: {'content-type': 'application/json'},
+      );
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(
+      ChangeNotifierProvider(
+        create: (_) => PropertyProvider(
+          apiService: PropertyApiService(httpClient: mockClient),
+        ),
+        child: const MaterialApp(home: HomeScreen()),
+      ),
+    );
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    expect(find.text('Properties'), findsOneWidget);
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Test Loft'), findsWidgets);
   });
 }

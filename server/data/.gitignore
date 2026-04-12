@@ -1,0 +1,2 @@
+# Runtime JSON database (created on first `npm start`). Remove this file if you want to commit a fixed dataset.
+properties.json
