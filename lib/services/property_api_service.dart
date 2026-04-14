@@ -6,7 +6,7 @@ import '../config/api_config.dart';
 import '../models/property.dart';
 import '../models/property_status.dart';
 
-/// HTTP client for the in-repo Express API (`server/`).
+/// HTTP client for the in-repo Express API (server/).
 class PropertyApiService {
   PropertyApiService({
     http.Client? httpClient,
@@ -19,8 +19,8 @@ class PropertyApiService {
 
   Uri _uri(String path) => Uri.parse('$_baseUrl$path');
 
-  /// [query] maps to `q` on the server (title, address, description).
-  /// [status] maps to `status` (forSale, sold, pending).
+  /// [query] maps to q on the server (title, address, description)
+  /// [status] maps to status (forSale, sold, pending)
   Future<List<Property>> fetchProperties({
     String? query,
     PropertyStatus? status,
@@ -71,7 +71,7 @@ class PropertyApiService {
         .toList(growable: false);
   }
 
-  /// Sends fields to `POST /api/properties`. The server assigns `id`.
+  /// Sends fields to POST /api/properties. The server assigns id
   Future<Property> createProperty(Property draft) async {
     final uri = _uri('/api/properties');
     final payload = <String, dynamic>{

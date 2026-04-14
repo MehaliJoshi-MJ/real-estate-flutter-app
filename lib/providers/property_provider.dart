@@ -30,15 +30,17 @@ class PropertyProvider extends ChangeNotifier {
   String get searchQuery => _query;
   PropertyStatus? get statusFilter => _statusFilter;
 
-  /// Results for the current server-side search and status filter.
+  /// Results for the current server-side search and status filter
   List<Property> get allProperties => _remote;
 
   List<Property> get visibleProperties => _remote;
 
+  /// initialize() / refreshFromApi(): load data from the API with current filters
   Future<void> initialize() async {
     await _fetchWithCurrentFilters();
   }
 
+  /// setSearchQuery: waits 350 ms after you stop typing (debounce), then fetches again so the server does the search
   void setSearchQuery(String value) {
     _query = value;
     notifyListeners();
@@ -54,6 +56,7 @@ class PropertyProvider extends ChangeNotifier {
     });
   }
 
+  /// setStatusFilter: changes "All / For sale / Sold / Pending" and refetches
   void setStatusFilter(PropertyStatus? status) {
     _statusFilter = status;
     _searchDebounce?.cancel();
@@ -102,7 +105,8 @@ class PropertyProvider extends ChangeNotifier {
     await _fetchWithCurrentFilters();
   }
 
-  /// Persists via `POST /api/properties` only; refreshes the list on success.
+  /// Persists via 'POST /api/properties' only; refreshes the list on success
+  /// addUserProperty: calls createProperty, then refetches the list so the home screen stays in sync
   Future<AddPropertyResult> addUserProperty(Property property) async {
     try {
       await _api.createProperty(property);

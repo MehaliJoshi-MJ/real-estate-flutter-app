@@ -6,9 +6,13 @@ import '../../models/property_status.dart';
 class PropertyCard extends StatelessWidget {
   const PropertyCard({super.key, required this.property, required this.onTap});
 
+  /// data to display (title, address, price, status, etc.)
   final Property property;
+
+  /// what to do when user taps the card (in app it opens PropertyDetailScreen)
   final VoidCallback onTap;
 
+  /// this helper turns price formatting (INR)
   static String _formatInr(double value) {
     final n = value.round();
     final neg = n < 0;
@@ -23,6 +27,8 @@ class PropertyCard extends StatelessWidget {
       i -= take;
     }
     return '${neg ? '-' : ''}₹${parts.join(',')}';
+
+    /// returns formatted price string like "₹1,23,456"
   }
 
   @override
@@ -30,6 +36,9 @@ class PropertyCard extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final statusColor = _statusColor(scheme, property.status);
 
+    /// color based on status (primary for sale, outline for sold, tertiary for pending)
+
+    /// a card with InkWell for tap effect, padding, and row layout
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -39,13 +48,17 @@ class PropertyCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// display property type icon (home_work_outlined) in a circle
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   width: 72,
                   height: 72,
                   color: scheme.surfaceContainerHighest,
-                  child: Icon(Icons.home_work_outlined, color: scheme.onSurfaceVariant),
+                  child: Icon(
+                    Icons.home_work_outlined,
+                    color: scheme.onSurfaceVariant,
+                  ),
                 ),
               ),
               const SizedBox(width: 12),
@@ -53,6 +66,7 @@ class PropertyCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    /// title + optional "user-added" icon, address, then status pill + price
                     Row(
                       children: [
                         Expanded(
@@ -66,14 +80,20 @@ class PropertyCard extends StatelessWidget {
                         if (property.isUserAdded)
                           Padding(
                             padding: const EdgeInsets.only(left: 6),
-                            child: Icon(Icons.bookmark_added_outlined, size: 18, color: scheme.primary),
+                            child: Icon(
+                              Icons.bookmark_added_outlined,
+                              size: 18,
+                              color: scheme.primary,
+                            ),
                           ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
                       property.address,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -81,20 +101,25 @@ class PropertyCard extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: statusColor.withValues(alpha: 0.12),
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Text(
                             property.status.displayLabel,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(color: statusColor),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: statusColor),
                           ),
                         ),
                         const Spacer(),
                         Text(
                           _formatInr(property.price),
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                          style: Theme.of(context).textTheme.titleSmall
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -108,6 +133,7 @@ class PropertyCard extends StatelessWidget {
     );
   }
 
+  /// helper to get color based on status (primary for sale, outline for sold, tertiary for pending)
   Color _statusColor(ColorScheme scheme, PropertyStatus s) {
     return switch (s) {
       PropertyStatus.forSale => scheme.primary,

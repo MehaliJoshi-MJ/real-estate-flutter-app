@@ -37,7 +37,7 @@ function seedProperties() {
     },
     {
       id: "p3",
-      title: "Shah Family Bungalow, Bopal",
+      title: "Chattwal Family Bungalow, Bopal",
       address: "Bopal, Ahmedabad — 380058",
       description:
         "Four bedrooms, three baths, covered parking for two cars, small garden, gated society.",

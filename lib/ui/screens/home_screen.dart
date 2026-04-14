@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Scaffold is called to be page
+    /// Scaffold is called to be page
     return Scaffold(
       appBar: AppBar(
         title: const Text('Properties'),
